@@ -1,0 +1,12 @@
+DONE: 
+
+Making an R project for the assignment occurred when I did my first commit
+
+TODO: 
+
+make code more robust, replace here() with rprojroot::has_file()
+
+add spaces around operators and after commas
+
+indentations @84-86, 91-93
+

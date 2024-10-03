@@ -1,0 +1,26 @@
+Identify the directory structure of the project: 
+
+Remember to create an R project for the assignment. In particular, that would help the function here to correctly identify the location from which the code should run. Given the structure you have and the lack of an .Rproj file, here can (and in my machine actually did) fail to locate the correct location. You may replace the call to here() with the call to rprojroot::has_file() or  rprojroot::has_dir() to make sure it finds it correctly.
+
+
+Identify the appropriate coding style in existing code: 
+
+In many places you missed the spaces around operators such as assignment and equal signs as well as spaces after commas.
+
+Good use of references to objects using `r expression` for answering the questions.
+
+
+Use the appropriate coding style in new code:
+
+The code you added follows the style nicely. A couple of things that may be improved are the indentation of the block in lines 84-86, and the comments in lines 91-93.
+
+Regarding the comments, it is best to avoid placing them at the end of a line unless they are simple and short comments. When they are more extensive, as in the mentioned case, they are better placed before the code.
+
+I get the idea of using list2env to access each data set, but I would caution about its use. Similar to the saving of the .RData issue, it is relatively easy to clutter your environment with unnecessary object duplicates and may yield unintentional side effects. For the uses you have in your file, it seems cleaner to read the data into a single tibble and group or filter as needed. With that being said, it is indeed to use the function on certain occasions.
+
+
+Correctness of project: 
+
+See comment about the failure of here().
+
+Among the things you added, I find interesting the inclusion of the lagged differences of ASFR across age groups. An alternative to compute those differences without creating missing values, is to pivot the selected variables into wider version over periods and then just compute the difference. Also, since all the values are rates, it might be easier to interpret their ratios instead of their differences.
