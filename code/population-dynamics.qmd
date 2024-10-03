@@ -63,7 +63,7 @@ library(rprojroot) # This package can be used to help with paths
 library(here) # This package can also be used to help with paths
 
 ### Path variables ----
-# root_path <- rprojroot::is_rstudio_project        # Using rprojroot knowing this is an RStudio project
+# root_path <- rprojroot::is_rstudio_project      # Using rprojroot knowing this is an RStudio project
 here_path <- here::here()                         # Just using here. It follows additional heuristics
                                                   # to try to identify where the root directory should be.
 # crit_path <- rprojroot::find_root(has_dir("code")) # Using the directory structure we defined
@@ -82,15 +82,18 @@ raw_data_path <- file.path(data_path, "raw_data")
 data_files <- list.files(path=raw_data_path, pattern="*.csv", full.names=TRUE)
 
 country_names <- list.files(path=raw_data_path, pattern="*.csv") %>% 
-              tools::file_path_sans_ext() %>% 
-                tolower()
+                    tools::file_path_sans_ext() %>% 
+                      tolower()
+
 # print(country_names)  # We cleaned up the file paths so we have a list of names for later use
 
 country <- lapply(data_files, read_csv) # This reads in all the csv's as data.frame's into a list
 
-list2env(setNames(country,country_names), .GlobalEnv) # Unpack the list of countries we just loaded
-                                                # We will use this whenever we need to do a comparison 
-                                                # between specific countries easily inside R
+
+# Unpack the list of countries we just loaded. 
+# We will use this whenever we need to do a comparison between specific countries easily inside R.
+
+list2env(setNames(country, country_names), .GlobalEnv) 
 
 ```
 
@@ -143,7 +146,7 @@ sum_py <- function (country) {
 
 # Function to compute the Crude Birth Rate (CBR)
 compute_cbr <- function (population_data) {
-  population_data%>% 
+  population_data %>% 
     group_by(period) %>% 
       summarise(cbr = sum(births) / sum(py)) %>% 
         pull()
@@ -173,7 +176,7 @@ country_cbr <- lapply(country, compute_cbr)
 
 ```{r, include=FALSE}
 # Unpack the list of cbr's invisibly
-list2env(setNames(country_cbr, paste0(country_names,"_cbr")), .GlobalEnv) # paste0 works like f-strings in Python
+list2env(setNames(country_cbr, paste0(country_names, "_cbr")), .GlobalEnv) # paste0 works like f-strings in Python
 
 ```
 
@@ -241,7 +244,7 @@ compare_asfr_across_time <- function(country) {
 country <- lapply(country, compute_asfr)
 
 # Our modified dataframes are still inside a list, unpack it 
-list2env(setNames(country,country_names), .GlobalEnv)
+list2env(setNames(country, country_names), .GlobalEnv)
 ```
 
 
@@ -294,7 +297,7 @@ compute_tfr <- function (population_data) {
 # Compute totals of women and births in the world by period
 world_totals <- world %>% 
   group_by(period) %>% 
-    summarise(total_women=sum(py.women),total_births=sum(births))
+    summarise(total_women=sum(py.women), total_births=sum(births))
 
 
 # Compare how much these totals have changed, removed parentheses to hide
@@ -312,7 +315,7 @@ changes_summed <- world_totals[2,-1] - world_totals[1,-1]
 country_tfr <- lapply(country, compute_tfr) 
 
 # New dataframes are still inside a list, unpack it for later use
-list2env(setNames(country_tfr,paste0(country_names,"_tfr")), .GlobalEnv)
+list2env(setNames(country_tfr, paste0(country_names,"_tfr")), .GlobalEnv)
 
 ```
 
@@ -352,7 +355,7 @@ country_cdr <- lapply(country, compute_cdr)
 
 ```{r, include=FALSE}
 # New dataframes are still inside a list, unpack it for later use
-list2env(setNames(country_cdr,paste0(country_names,"_cdr")), .GlobalEnv)
+list2env(setNames(country_cdr, paste0(country_names,"_cdr")), .GlobalEnv)
 ```
 
 
@@ -390,14 +393,14 @@ First we compute the ASDR by dividing deaths by person-years for each country.
 # Function to compute Age specific death rate (ASDR)
 compute_asdr <- function (population_data) {
   population_data %>% 
-    mutate(asdr = deaths/py)
+    mutate(asdr = deaths / py)
 }
 ```
 
 ```{r, include=FALSE}
 # Compute ASDR for each data set
 country <- lapply(country, compute_asdr)
-list2env(setNames(country,country_names), .GlobalEnv)
+list2env(setNames(country, country_names), .GlobalEnv)
 ```
 
 Then we can compare ASDR's between Kenya and Sweden.
@@ -456,7 +459,7 @@ compute_pop_prop <- function (population_data) {
 
 country <- lapply(country, compute_pop_prop)
 
-list2env(setNames(country,country_names), .GlobalEnv)
+list2env(setNames(country, country_names), .GlobalEnv)
 
 ```
 Then we calculate CDR for Kenya with a new formula which takes into account the 
